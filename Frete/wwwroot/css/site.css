@@ -53,3 +53,12 @@ label {
 .animate-slide-in {
     animation: slide-in 1s ease-out;
 }
+
+.site-container {
+    min-height: 100vh;
+    position: relative;
+}
+
+.bg-white {
+    background-color: white;
+}

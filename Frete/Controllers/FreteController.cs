@@ -4,13 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Net.Http;
-using System.Threading.Tasks;
-
+using System.Text;
+using System.Text.Json;
+using System.Web.Helpers;
+using JsonException = System.Text.Json.JsonException;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Frete.Controllers
 {
@@ -92,7 +91,7 @@ namespace Frete.Controllers
 
                 return View(shippingServices);
             }
-            return RedirectToAction("Erro");
+            return RedirectToAction("Error");
         }
 
         public async Task<ActionResult> ConsultarFrete(FreteModel formulario)
@@ -104,26 +103,74 @@ namespace Frete.Controllers
 
             using (HttpClient client = new HttpClient())
             {
-                try
-                {
-                    string apiUrl = "https://api.frenet.com.br/shipping/info";
-                    HttpResponseMessage response = await client.GetAsync(apiUrl);
+                // Define a URL da API
+                string apiUrl = "https://api.frenet.com.br/shipping/quote";
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string responseContent = await response.Content.ReadAsStringAsync();
-                        TempData["RespostaAPI"] = responseContent;
-                        return RedirectToAction("Cotacao");
-                    }
-                    return View("Error");
-                }
-                catch (Exception ex)
+                // Define o conteúdo da requisição (corpo) como um objeto JSON
+                var requestData = new
                 {
-                    ViewBag.ErrorMessage = "Ocorreu um erro ao processar a requisição. Por favor, tente novamente mais tarde.";
-                    return View("Error");
+                    SellerCEP = formulario.CepOrigem,
+                    RecipientCEP = formulario.CepDestino,
+                    ShipmentInvoiceValue = formulario.ValorRemessa,
+                    Quantity = formulario.Quantidade,
+                    ShippingServiceCode = (string)null,
+                    ShippingItemArray = new[]
+                    {
+                        new
+                        {
+                            Height = formulario.Altura,
+                            Length = formulario.Comprimento,
+                            Weight = formulario.Peso,
+                            Width = formulario.Largura,
+                        }
+                    },
+                    RecipientCountry = "BR"
+                };
+
+                // Serializa o objeto JSON para uma string
+                string requestJson = JsonConvert.SerializeObject(requestData);
+
+                // Cria o conteúdo da requisição HTTP com o corpo da requisição
+                var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
+
+                // Define os headers da requisição
+                content.Headers.Add("Token", "B9CDA873RC7ACR4864R9E36R03EFF0B7C4B7");
+                content.Headers.Add("Chave", "daniel.engca@outlook.com");
+                content.Headers.Add("senha", "A652T4gjQIJIFBrxwd4FQ==");
+
+                // Envie a requisição POST para a API
+                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                // Verifique a resposta
+                if (response.IsSuccessStatusCode)
+                {
+                    // A requisição foi bem-sucedida, você pode obter a resposta
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    TempData["RespostaAPIQUOTA"] = responseContent;
+                    return RedirectToAction("CotacaoResponse");
                 }
+                return RedirectToAction("Error");
+
             }
         }
+        public IActionResult CotacaoResponse()
+        {
+            var jsonString = TempData["RespostaAPIQUOTA"] as string;
+
+            if (!string.IsNullOrEmpty(jsonString))
+            {
+                var shippingServiceResponse = JsonConvert.DeserializeObject<ShippingServiceResponse>(jsonString);
+                var shippingServices = shippingServiceResponse?.ShippingSevicesArray;
+
+                if (shippingServices != null)
+                {
+                    return View(shippingServices);
+                }
+            }
+            return RedirectToAction("Error");
+        }
+
+
 
         public IActionResult Error()
         {

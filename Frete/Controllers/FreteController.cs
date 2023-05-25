@@ -1,7 +1,9 @@
 ﻿using Frete.Data;
 using Frete.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Frete.Controllers
 {
@@ -31,20 +33,26 @@ namespace Frete.Controllers
                 return BadRequest();
             }
 
-            FreteModel model = new FreteModel();
-            model.CepOrigem = formulario.CepOrigem; 
-            model.CepDestino = formulario.CepDestino; 
-            model.CodigoServicoEnvio = formulario.CodigoServicoEnvio; 
-            model.ValorRemessa = formulario.ValorRemessa;
-            model.Largura = formulario.Largura;
-            model.Comprimento = formulario.Comprimento;
-            model.Altura = formulario.Altura;
-            model.Peso = formulario.Peso;
-            model.Quantidade = formulario.Quantidade;
+            using (var connection = new SqlConnection("DefaultConnection"))
+            {
+                using (var command = new SqlCommand("dbo.AdicionarFrete", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
 
-            _db.Frete.Add(model);
-            _db.SaveChanges();
+                    command.Parameters.AddWithValue("@CepOrigem", formulario.CepOrigem);
+                    command.Parameters.AddWithValue("@CepDestino", formulario.CepDestino);
+                    command.Parameters.AddWithValue("@CodigoServicoEnvio", formulario.CodigoServicoEnvio);
+                    command.Parameters.AddWithValue("@ValorRemessa", formulario.ValorRemessa);
+                    command.Parameters.AddWithValue("@Largura", formulario.Largura);
+                    command.Parameters.AddWithValue("@Comprimento", formulario.Comprimento);
+                    command.Parameters.AddWithValue("@Altura", formulario.Altura);
+                    command.Parameters.AddWithValue("@Peso", formulario.Peso);
+                    command.Parameters.AddWithValue("@Quantidade", formulario.Quantidade);
 
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
             return RedirectToAction("Index");
         }
     }

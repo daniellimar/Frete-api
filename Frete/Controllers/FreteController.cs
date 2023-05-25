@@ -6,10 +6,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Text;
-using System.Text.Json;
-using System.Web.Helpers;
-using JsonException = System.Text.Json.JsonException;
-using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Frete.Controllers
 {
@@ -103,10 +99,8 @@ namespace Frete.Controllers
 
             using (HttpClient client = new HttpClient())
             {
-                // Define a URL da API
                 string apiUrl = "https://api.frenet.com.br/shipping/quote";
 
-                // Define o conteúdo da requisição (corpo) como um objeto JSON
                 var requestData = new
                 {
                     SellerCEP = formulario.CepOrigem,
@@ -127,30 +121,22 @@ namespace Frete.Controllers
                     RecipientCountry = "BR"
                 };
 
-                // Serializa o objeto JSON para uma string
                 string requestJson = JsonConvert.SerializeObject(requestData);
-
-                // Cria o conteúdo da requisição HTTP com o corpo da requisição
                 var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
-
-                // Define os headers da requisição
+                
                 content.Headers.Add("Token", "B9CDA873RC7ACR4864R9E36R03EFF0B7C4B7");
                 content.Headers.Add("Chave", "daniel.engca@outlook.com");
                 content.Headers.Add("senha", "A652T4gjQIJIFBrxwd4FQ==");
 
-                // Envie a requisição POST para a API
                 HttpResponseMessage response = await client.PostAsync(apiUrl, content);
 
-                // Verifique a resposta
                 if (response.IsSuccessStatusCode)
                 {
-                    // A requisição foi bem-sucedida, você pode obter a resposta
                     string responseContent = await response.Content.ReadAsStringAsync();
                     TempData["RespostaAPIQUOTA"] = responseContent;
                     return RedirectToAction("CotacaoResponse");
                 }
                 return RedirectToAction("Error");
-
             }
         }
         public IActionResult CotacaoResponse()
@@ -169,9 +155,7 @@ namespace Frete.Controllers
             }
             return RedirectToAction("Error");
         }
-
-
-
+        
         public IActionResult Error()
         {
             return View();

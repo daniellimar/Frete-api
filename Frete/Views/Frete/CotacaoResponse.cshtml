@@ -1,7 +1,7 @@
 ﻿@model List<ShippingService>
 
 <section class="mt-4 mb-5">
-    <h3 class="animate-slide-in mb-3">Serviços de transporte</h3>
+    <h3 class="animate-slide-in mb-3">Serviços de transporte: <small class="text-success">Disponíveis</small></h3>
     @foreach (var service in Model)
     {
         if (service.Error == false)
@@ -39,20 +39,17 @@
 </section>
 
 <section class="mt-5 mb-5">
-    <h3 class="animate-slide-in py-3">Erro ao calcular | Serviços de transporte: </h3>
+    <h3 class="animate-slide-in py-3">Serviços de transporte: <small class="text-warning">Indisponíveis</small></h3>
     @foreach (var service in Model)
     {
         if (service.Error != false)
         {
             <div class="alert alert-warning">
                 <h4 class="alert-heading">Operadora: @service.CarrierCode - @service.Carrier</h4><hr>
-                <h6 class="mb-5"><b>@service.Msg</b></h6>
+                <h6 class="py-3"><b>@service.Msg</b></h6>
                 <div class="row">
-                    <div class="col-sm-4">
-                        <p><strong>Descrição do Serviço:</strong> @service.ServiceDescription</p>
-                    </div>
-                    <div class="col-sm-4">
-                        <p><strong>Código de Serviço:</strong> @service.ServiceCode</p>
+                    <div class="col-sm-12">
+                        <p><strong>Descrição do Serviço:</strong> @service.ServiceCode - @service.ServiceDescription</p>
                     </div>
                 </div>
                 <hr />

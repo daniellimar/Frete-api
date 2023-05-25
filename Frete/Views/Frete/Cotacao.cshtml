@@ -1,0 +1,25 @@
+﻿@model List<ShippingService>
+
+<h3 class="animate-slide-in"><small>Ordenado por: </small>Melhor Preço</h3>
+
+<!-- Exemplo de exibição dos dados na view -->
+@foreach (var jsonArrayString in Model)
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@jsonArrayString.ServiceCode</h5>
+            <p class="card-text">
+                <strong>Descrição do Serviço: </strong>@jsonArrayString.ServiceDescription
+            </p>
+            <p class="card-text">
+                <strong>Operadora: </strong>@jsonArrayString.Carrier
+            </p>
+            <p class="card-text">
+                <strong>Código de Serviço: </strong>@jsonArrayString.ServiceCode
+            </p>
+            <p class="card-text">
+                <strong>Código da Operadora: </strong>@jsonArrayString.CarrierCode
+            </p>
+        </div>
+    </div>
+}

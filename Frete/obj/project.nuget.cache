@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "j3xW+fa7DW3zCI9QJ1lSWNlCwXfU8ftnO9M1byyEPOIwwfazQtGw0hqGbxNgiUBbY3r6S7FsvZ8BpOvmHfZp6A==",
+  "dgSpecHash": "JOfmOZ1k9Cdua0CAUMmbrLEFmA6//njUjXH7Vc/0ueDKhyK9eMG4tMihLqh5aTqnkHY9Irp0AOpQtlUTALDT6w==",
   "success": true,
   "projectFilePath": "C:\\Users\\danie\\projetos\\ASP NET CORE\\Frete\\Frete\\Frete.csproj",
   "expectedPackageFiles": [
@@ -67,6 +67,7 @@
     "C:\\Users\\danie\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "C:\\Users\\danie\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\danie\\.nuget\\packages\\neat.procedure\\1.0.6\\neat.procedure.1.0.6.nupkg.sha512",
+    "C:\\Users\\danie\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\danie\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\danie\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
     "C:\\Users\\danie\\.nuget\\packages\\system.configuration.configurationmanager\\5.0.0\\system.configuration.configurationmanager.5.0.0.nupkg.sha512",

@@ -26,3 +26,30 @@ label {
     display: flex;
     margin-left: 4px;
 }
+
+.card {
+    transition: transform 0.5s;
+    position: relative; /* Adicione essa propriedade */
+}
+
+.card:hover {
+    transform: scale(1.05);
+    z-index: 1; /* Defina um valor maior para o z-index no hover */
+}
+
+/* Defina a animação */
+@keyframes slide-in {
+    0% {
+        opacity: 0;
+        transform: translateY(50%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-in {
+    animation: slide-in 1s ease-out;
+}

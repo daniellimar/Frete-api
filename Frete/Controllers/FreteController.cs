@@ -2,9 +2,14 @@
 using Frete.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-
+using System.Diagnostics;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 
 namespace Frete.Controllers
@@ -29,7 +34,7 @@ namespace Frete.Controllers
         }
 
         [HttpPost]
-        public ActionResult Salvar(FreteModel formulario)
+        public async Task<ActionResult> Salvar(FreteModel formulario)
         {
             if (formulario is null)
             {
@@ -56,7 +61,60 @@ namespace Frete.Controllers
                     command.ExecuteNonQuery();
                 }
             }
-            return RedirectToAction("Index");
+
+            // Consultar a API externa
+            using (HttpClient client = new HttpClient())
+            {
+                // Fazer a requisição GET para a URL da API externa
+                string apiUrl = "https://api.frenet.com.br/shipping/info";
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Ler a resposta da API
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    // Armazenar a resposta na TempData
+                    TempData["RespostaAPI"] = responseContent;
+
+                    // Processar a resposta como necessário
+                    // ...
+                }
+                else
+                {
+                    // Lidar com o caso em que a requisição não foi bem-sucedida
+                    // ...
+                }
+            }
+            return RedirectToAction("Cotacao");
+        }
+        public IActionResult Cotacao()
+        {
+            string respostaAPI = TempData["RespostaAPI"] as string;
+
+            if (!string.IsNullOrEmpty(respostaAPI))
+            {
+                // Converter a respostaAPI em objetos C# usando a desserialização JSON
+                var dados = JsonConvert.DeserializeObject<dynamic>(respostaAPI);
+
+                // Obter a propriedade ShippingSeviceAvailableArray como um JArray
+                var jsonArrayString = (JArray)dados.ShippingSeviceAvailableArray;
+
+                // Converter o JArray em List<ShippingService>
+                List<Frete.Models.ShippingService> shippingServices = jsonArrayString.ToObject<List<Frete.Models.ShippingService>>();
+
+                // Passar a lista para a View
+                return View(shippingServices);
+
+
+                // Passar a string jsonArrayString para a view ou fazer o que desejar com ela
+                return View(jsonArrayString);
+            }
+            else
+            {
+                // Lidar com o caso em que a respostaAPI é nula ou vazia
+                // Por exemplo, redirecionar para uma página de erro ou retornar uma mensagem de erro
+                return RedirectToAction("Erro");
+            }
         }
     }
 }

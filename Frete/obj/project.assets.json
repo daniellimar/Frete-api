@@ -1098,6 +1098,15 @@
           "lib/netstandard2.0/Mono.TextTemplating.dll": {}
         }
       },
+      "Neat.Procedure/1.0.6": {
+        "type": "package",
+        "compile": {
+          "lib/net40/Neat.Procedure.dll": {}
+        },
+        "runtime": {
+          "lib/net40/Neat.Procedure.dll": {}
+        }
+      },
       "System.Buffers/4.5.1": {
         "type": "package",
         "compile": {
@@ -2890,6 +2899,19 @@
         "mono.texttemplating.nuspec"
       ]
     },
+    "Neat.Procedure/1.0.6": {
+      "sha512": "Yu118/kpalp7m8BrlAEnEISUIxLLjAi+iRn7eZraXk6zQQ2Ckz/eAh2e9mgjW9/wVPS7ZwXhdHHAx7YIi8AJxg==",
+      "type": "package",
+      "path": "neat.procedure/1.0.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "NuGet.exe",
+        "lib/net40/Neat.Procedure.dll",
+        "neat.procedure.1.0.6.nupkg.sha512",
+        "neat.procedure.nuspec"
+      ]
+    },
     "System.Buffers/4.5.1": {
       "sha512": "Rw7ijyl1qqRS0YQD/WycNst8hUUMgrMH4FCn1nNm27M4VxchZ1js3fVjQaANHO5f3sN4isvP4a+Met9Y4YomAg==",
       "type": "package",
@@ -4270,7 +4292,8 @@
       "Microsoft.EntityFrameworkCore >= 7.0.5",
       "Microsoft.EntityFrameworkCore.Design >= 7.0.5",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.5",
-      "Microsoft.EntityFrameworkCore.Tools >= 7.0.5"
+      "Microsoft.EntityFrameworkCore.Tools >= 7.0.5",
+      "Neat.Procedure >= 1.0.6"
     ]
   },
   "packageFolders": {
@@ -4344,6 +4367,10 @@
             "suppressParent": "All",
             "target": "Package",
             "version": "[7.0.5, )"
+          },
+          "Neat.Procedure": {
+            "target": "Package",
+            "version": "[1.0.6, )"
           }
         },
         "imports": [
@@ -4406,6 +4433,16 @@
       "warningLevel": 1,
       "message": "O pacote 'Microsoft.Web.Infrastructure 1.0.0' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' em vez da estrutura de destino do projeto 'net6.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
       "libraryId": "Microsoft.Web.Infrastructure",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "O pacote 'Neat.Procedure 1.0.6' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' em vez da estrutura de destino do projeto 'net6.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
+      "libraryId": "Neat.Procedure",
       "targetGraphs": [
         "net6.0"
       ]

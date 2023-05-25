@@ -2,15 +2,18 @@
 using Frete.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Data.SqlClient;
+
+
 
 namespace Frete.Controllers
 {
 
 	public class FreteController : Controller
 	{
-		readonly private ApplicationDbContext _db;
+        private const string ConnectionString = "DefaultConnection";
+        readonly private ApplicationDbContext _db;
 		public FreteController(ApplicationDbContext db)
 		{
 			_db = db;
@@ -33,7 +36,7 @@ namespace Frete.Controllers
                 return BadRequest();
             }
 
-            using (var connection = new SqlConnection("DefaultConnection"))
+            using (var connection = new SqlConnection("server=DANIELLIMA\\SQLEXPRESS; Database=Frete; trusted_connection=true; TrustServerCertificate=True;"))
             {
                 using (var command = new SqlCommand("dbo.AdicionarFrete", connection))
                 {

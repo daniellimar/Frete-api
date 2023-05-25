@@ -1,4 +1,8 @@
-CREATE PROCEDURE dbo.AdicionarFrete
+IF OBJECT_ID('AdicionarFrete', 'P') IS NOT NULL
+    DROP PROCEDURE AdicionarFrete;
+
+
+  CREATE PROCEDURE dbo.AdicionarFrete
     @CepOrigem VARCHAR(50),
     @CepDestino VARCHAR(50),
     @CodigoServicoEnvio VARCHAR(50),
@@ -8,8 +12,9 @@ CREATE PROCEDURE dbo.AdicionarFrete
     @Altura DECIMAL(18, 2),
     @Peso DECIMAL(18, 2),
     @Quantidade INT
+    @DataUltimaAtualizacao DateTime
 AS
 BEGIN
-    INSERT INTO Frete (CepOrigem, CepDestino, CodigoServicoEnvio, ValorRemessa, Largura, Comprimento, Altura, Peso, Quantidade)
-    VALUES (@CepOrigem, @CepDestino, @CodigoServicoEnvio, @ValorRemessa, @Largura, @Comprimento, @Altura, @Peso, @Quantidade)
+    INSERT INTO Frete (CepOrigem, CepDestino, CodigoServicoEnvio, ValorRemessa, Largura, Comprimento, Altura, Peso, Quantidade, DataUltimaAtualizacao)
+    VALUES (@CepOrigem, @CepDestino, @CodigoServicoEnvio, @ValorRemessa, @Largura, @Comprimento, @Altura, @Peso, @Quantidade, @DataUltimaAtualizacao)
 END

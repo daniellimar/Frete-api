@@ -13,7 +13,8 @@
           "Microsoft.EntityFrameworkCore": "7.0.5",
           "Microsoft.EntityFrameworkCore.Design": "7.0.5",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.5",
-          "Microsoft.EntityFrameworkCore.Tools": "7.0.5"
+          "Microsoft.EntityFrameworkCore.Tools": "7.0.5",
+          "Neat.Procedure": "1.0.6"
         },
         "runtime": {
           "Frete.dll": {}
@@ -637,6 +638,14 @@
           "lib/netstandard2.0/Mono.TextTemplating.dll": {
             "assemblyVersion": "2.2.0.0",
             "fileVersion": "2.2.1.1"
+          }
+        }
+      },
+      "Neat.Procedure/1.0.6": {
+        "runtime": {
+          "lib/net40/Neat.Procedure.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       },
@@ -1332,6 +1341,13 @@
       "sha512": "sha512-KZYeKBET/2Z0gY1WlTAK7+RHTl7GSbtvTLDXEZZojUdAPqpQNDL6tHv7VUpqfX5VEOh+uRGKaZXkuD253nEOBQ==",
       "path": "mono.texttemplating/2.2.1",
       "hashPath": "mono.texttemplating.2.2.1.nupkg.sha512"
+    },
+    "Neat.Procedure/1.0.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Yu118/kpalp7m8BrlAEnEISUIxLLjAi+iRn7eZraXk6zQQ2Ckz/eAh2e9mgjW9/wVPS7ZwXhdHHAx7YIi8AJxg==",
+      "path": "neat.procedure/1.0.6",
+      "hashPath": "neat.procedure.1.0.6.nupkg.sha512"
     },
     "System.Buffers/4.5.1": {
       "type": "package",

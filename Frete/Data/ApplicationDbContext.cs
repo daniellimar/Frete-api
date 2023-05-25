@@ -10,6 +10,6 @@ namespace Frete.Data
 
         }
 
-        public DbSet<FreteModel> Frete { get; set; }
+        public virtual DbSet<FreteModel> Frete { get; set; }
     }
 }

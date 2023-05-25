@@ -14,7 +14,7 @@ namespace Frete.Models
 		public decimal Altura { get; set; }
 		public decimal Peso { get; set; }
 		public int Quantidade { get; set; }
-		public bool Status { get; set; }
-		public DateTime DataUltimaAtualizacao { get; set; } = DateTime.Now;
+        public bool? Status { get; set; }
+		public DateTime? DataUltimaAtualizacao { get; set; } = DateTime.Now;
     }
 }

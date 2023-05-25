@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "3Dca5EdM5b8IUClsY4WS4FCb/r/o2hW1QQDm/qDdqWUgF5EWaYo3XGqySUYuKrZ6J3lH+AR6e1wsT3hFnFno+g==",
+  "dgSpecHash": "j3xW+fa7DW3zCI9QJ1lSWNlCwXfU8ftnO9M1byyEPOIwwfazQtGw0hqGbxNgiUBbY3r6S7FsvZ8BpOvmHfZp6A==",
   "success": true,
   "projectFilePath": "C:\\Users\\danie\\projetos\\ASP NET CORE\\Frete\\Frete\\Frete.csproj",
   "expectedPackageFiles": [
@@ -66,6 +66,7 @@
     "C:\\Users\\danie\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\danie\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "C:\\Users\\danie\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\danie\\.nuget\\packages\\neat.procedure\\1.0.6\\neat.procedure.1.0.6.nupkg.sha512",
     "C:\\Users\\danie\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\danie\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
     "C:\\Users\\danie\\.nuget\\packages\\system.configuration.configurationmanager\\5.0.0\\system.configuration.configurationmanager.5.0.0.nupkg.sha512",
@@ -134,6 +135,16 @@
       "warningLevel": 1,
       "message": "O pacote 'Microsoft.Web.Infrastructure 1.0.0' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' em vez da estrutura de destino do projeto 'net6.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
       "libraryId": "Microsoft.Web.Infrastructure",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "O pacote 'Neat.Procedure 1.0.6' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' em vez da estrutura de destino do projeto 'net6.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
+      "libraryId": "Neat.Procedure",
       "targetGraphs": [
         "net6.0"
       ]

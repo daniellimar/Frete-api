@@ -15,13 +15,13 @@ using System.Threading.Tasks;
 namespace Frete.Controllers
 {
 
-	public class FreteController : Controller
-	{
+    public class FreteController : Controller
+    {
         private const string ConnectionString = "DefaultConnection";
         readonly private ApplicationDbContext _db;
-		public FreteController(ApplicationDbContext db)
-		{
-			_db = db;
+        public FreteController(ApplicationDbContext db)
+        {
+            _db = db;
         }
 
         public IActionResult Index()
@@ -93,6 +93,41 @@ namespace Frete.Controllers
                 return View(shippingServices);
             }
             return RedirectToAction("Erro");
+        }
+
+        public async Task<ActionResult> ConsultarFrete(FreteModel formulario)
+        {
+            if (formulario is null)
+            {
+                return BadRequest();
+            }
+
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    string apiUrl = "https://api.frenet.com.br/shipping/info";
+                    HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseContent = await response.Content.ReadAsStringAsync();
+                        TempData["RespostaAPI"] = responseContent;
+                        return RedirectToAction("Cotacao");
+                    }
+                    return View("Error");
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.ErrorMessage = "Ocorreu um erro ao processar a requisição. Por favor, tente novamente mais tarde.";
+                    return View("Error");
+                }
+            }
+        }
+
+        public IActionResult Error()
+        {
+            return View();
         }
     }
 }

@@ -1,0 +1,14 @@
+﻿<section class="p-5">
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Ocorreu um erro ao processar a requisição.</h4>
+        <p>@ViewBag.ErrorMessage</p>
+        <hr>
+        <p class="mb-3">Por favor, tente novamente mais tarde.</p>
+        <a href="@Url.Action("Index")">
+            <button class="btn btn-primary mt-3">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                Voltar
+            </button>
+        </a>
+    </div>
+</section>

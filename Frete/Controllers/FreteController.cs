@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Text;
+using System.Threading;
 
 namespace Frete.Controllers
 {
@@ -21,54 +22,7 @@ namespace Frete.Controllers
         public IActionResult Index()
         {
             IEnumerable<FreteModel> emprestimos = _db.Cotacoes;
-            var gruposPorCepOrigem = emprestimos.GroupBy(e => e.SellerCEP)
-                                    .Select(g => new { SellerCEP = g.Key, CepDestino = g.Select(e => e.RecipientCEP), Quantity = g.Count() });
-
-            return View(gruposPorCepOrigem);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Salvar(FreteModel formulario)
-        {
-            if (formulario is null)
-            {
-                return BadRequest();
-            }
-
-            using (var connection = new SqlConnection("server=DANIELLIMA\\SQLEXPRESS; Database=Frete; trusted_connection=true; TrustServerCertificate=True;"))
-            {
-                using (var command = new SqlCommand("dbo.AdicionarFrete", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.Parameters.AddWithValue("@CepOrigem", formulario.SellerCEP);
-                    command.Parameters.AddWithValue("@CepDestino", formulario.RecipientCEP);
-                    command.Parameters.AddWithValue("@CodigoServicoEnvio", formulario.ShippingServiceCode);
-                    command.Parameters.AddWithValue("@ValorRemessa", formulario.ShipmentInvoiceValue);
-                    command.Parameters.AddWithValue("@Largura", formulario.Width);
-                    command.Parameters.AddWithValue("@Comprimento", formulario.Length);
-                    command.Parameters.AddWithValue("@Altura", formulario.Height);
-                    command.Parameters.AddWithValue("@Peso", formulario.Weight);
-                    command.Parameters.AddWithValue("@Quantidade", formulario.Quantity);
-
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-            }
-
-            using (HttpClient client = new HttpClient())
-            {
-                string apiUrl = "https://api.frenet.com.br/shipping/info";
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseContent = await response.Content.ReadAsStringAsync();
-                    TempData["RespostaAPI"] = responseContent;
-                    return RedirectToAction("Cotacao");
-                }
-                return RedirectToAction("Error");
-            }
+            return View();
         }
         public IActionResult Cotacao()
         {
@@ -78,7 +32,7 @@ namespace Frete.Controllers
             {
                 var dados = JsonConvert.DeserializeObject<dynamic>(respostaAPI);
                 var jsonArrayString = (JArray)dados.ShippingSeviceAvailableArray;
-                List<ShippingService> shippingServices = jsonArrayString.ToObject<List<Frete.Models.ShippingService>>();
+                List<ShippingServiceModel> shippingServices = jsonArrayString.ToObject<List<Frete.Models.ShippingServiceModel>>();
 
                 return View(shippingServices);
             }
@@ -91,6 +45,8 @@ namespace Frete.Controllers
             {
                 return BadRequest();
             }
+
+            //return Ok(formulario);
 
 			using (var connection = new SqlConnection("server=DANIELLIMA\\SQLEXPRESS; Database=Frete; trusted_connection=true; TrustServerCertificate=True;"))
 			{
@@ -113,6 +69,7 @@ namespace Frete.Controllers
 				    command.ExecuteNonQuery();
 			    }
 			}
+
 
 			using (HttpClient client = new HttpClient())
             {
@@ -150,7 +107,91 @@ namespace Frete.Controllers
                 {
                     string responseContent = await response.Content.ReadAsStringAsync();
                     TempData["RespostaAPIQUOTA"] = responseContent;
-                    return RedirectToAction("CotacaoResponse");
+					//return Ok(responseContent);
+
+
+
+					string connectionString = "server=DANIELLIMA\\SQLEXPRESS; Database=Frete; trusted_connection=true; TrustServerCertificate=True;"; // Replace with your actual connection string
+
+					using (SqlConnection connection = new SqlConnection(connectionString))
+					{
+						connection.Open();
+
+						// Parse the JSON response
+						JObject responseObject = JObject.Parse(responseContent);
+
+						// Get the arrays of items from the response
+						JArray serviceCodeArray = responseObject["ServiceCode"] as JArray;
+						JArray serviceDescriptionArray = responseObject["ServiceDescription"] as JArray;
+						JArray carrierArray = responseObject["Carrier"] as JArray;
+						JArray carrierCodeArray = responseObject["CarrierCode"] as JArray;
+						JArray shippingPriceArray = responseObject["ShippingPrice"] as JArray;
+						JArray deliveryTimeArray = responseObject["DeliveryTime"] as JArray;
+						JArray errorArray = responseObject["Error"] as JArray;
+						JArray originalDeliveryTimeArray = responseObject["OriginalDeliveryTime"] as JArray;
+						JArray originalShippingPriceArray = responseObject["OriginalShippingPrice"] as JArray;
+						JArray responseTimeArray = responseObject["ResponseTime"] as JArray;
+						JArray allowBuyLabelArray = responseObject["AllowBuyLabel"] as JArray;
+
+						if (serviceCodeArray != null && serviceDescriptionArray != null && carrierArray != null && carrierCodeArray != null &&
+							shippingPriceArray != null && deliveryTimeArray != null && errorArray != null && originalDeliveryTimeArray != null &&
+							originalShippingPriceArray != null && responseTimeArray != null && allowBuyLabelArray != null)
+						{
+							// Iterate over each item in the arrays
+							for (int i = 0; i < serviceCodeArray.Count; i++)
+							{
+								using (SqlCommand command = new SqlCommand("InsertShippingService", connection))
+								{
+									command.CommandType = CommandType.StoredProcedure;
+
+									// Extract values from the arrays
+									string serviceCode = (string)serviceCodeArray[i];
+									string serviceDescription = (string)serviceDescriptionArray[i];
+									string carrier = (string)carrierArray[i];
+									string carrierCode = (string)carrierCodeArray[i];
+									decimal shippingPrice = (decimal)shippingPriceArray[i];
+									int deliveryTime = (int)deliveryTimeArray[i];
+									bool error = (bool)errorArray[i];
+									string originalDeliveryTime = (string)originalDeliveryTimeArray[i];
+									string originalShippingPrice = (string)originalShippingPriceArray[i];
+									string responseTime = (string)responseTimeArray[i];
+									bool allowBuyLabel = (bool)allowBuyLabelArray[i];
+
+									// Add parameters
+									command.Parameters.AddWithValue("@ServiceCode", serviceCode);
+									command.Parameters.AddWithValue("@ServiceDescription", serviceDescription);
+									command.Parameters.AddWithValue("@Carrier", carrier);
+									command.Parameters.AddWithValue("@CarrierCode", carrierCode);
+									command.Parameters.AddWithValue("@ShippingPrice", shippingPrice);
+									command.Parameters.AddWithValue("@DeliveryTime", deliveryTime);
+									command.Parameters.AddWithValue("@Error", error);
+									command.Parameters.AddWithValue("@Msg", string.Empty); // Since there's no "Msg" property in the JSON structure
+									command.Parameters.AddWithValue("@OriginalDeliveryTime", originalDeliveryTime);
+									command.Parameters.AddWithValue("@OriginalShippingPrice", originalShippingPrice);
+									command.Parameters.AddWithValue("@ResponseTime", responseTime);
+									command.Parameters.AddWithValue("@AllowBuyLabel", allowBuyLabel);
+
+									// Execute the command
+									object result = command.ExecuteScalar();
+
+									// Check the result
+									if (result != null && result != DBNull.Value)
+									{
+										int shippingServiceID = Convert.ToInt32(result);
+										// Handle the inserted ShippingServiceID as needed
+									}
+								}
+							}
+						}
+						else
+						{
+							// Handle the case when any of the arrays are not found in the JSON response
+						}
+					}
+
+
+
+					return RedirectToAction("CotacaoResponse");
                 }
                 return RedirectToAction("Error");
             }

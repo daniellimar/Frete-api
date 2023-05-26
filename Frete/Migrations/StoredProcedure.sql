@@ -39,3 +39,56 @@ BEGIN
         @RecipientCEP
     )
 END
+
+
+IF OBJECT_ID('InsertShippingService', 'P') IS NOT NULL
+    DROP PROCEDURE InsertShippingService;
+
+CREATE PROCEDURE InsertShippingService
+(
+    @ServiceCode VARCHAR(50),
+    @ServiceDescription VARCHAR(100),
+    @Carrier VARCHAR(100),
+    @CarrierCode VARCHAR(50),
+    @ShippingPrice DECIMAL(10, 2),
+    @DeliveryTime INT,
+    @Error BIT,
+    @Msg VARCHAR(100),
+    @OriginalDeliveryTime VARCHAR(50),
+    @OriginalShippingPrice VARCHAR(50),
+    @ResponseTime VARCHAR(50),
+    @AllowBuyLabel BIT
+)
+AS
+BEGIN
+    INSERT INTO ShippingService
+    (
+        ServiceCode,
+        ServiceDescription,
+        Carrier,
+        CarrierCode,
+        ShippingPrice,
+        DeliveryTime,
+        Error,
+        Msg,
+        OriginalDeliveryTime,
+        OriginalShippingPrice,
+        ResponseTime,
+        AllowBuyLabel
+    )
+    VALUES
+    (
+        @ServiceCode,
+        @ServiceDescription,
+        @Carrier,
+        @CarrierCode,
+        @ShippingPrice,
+        @DeliveryTime,
+        @Error,
+        @Msg,
+        @OriginalDeliveryTime,
+        @OriginalShippingPrice,
+        @ResponseTime,
+        @AllowBuyLabel
+    )
+END

@@ -37,8 +37,8 @@
 							<input type="text" class="form-control" id="Height" name="Height" required value="2">
 						</div>
 						<div class="col-md-4">
-							<label for="Height" class="form-label">Comprimento</label>
-							<input type="text" class="form-control" id="Height" name="Height" required value="15">
+							<label for="Length" class="form-label">Comprimento</label>
+							<input type="text" class="form-control" id="Length" name="Length" required value="15">
 						</div>
 						<div class="col-md-4">
 							<label for="Width" class="form-label">Largura</label>
@@ -92,11 +92,11 @@
 				<tbody>
 					@if (Model != null)
 					{
-						@foreach (var grupoPorCepOrigem in Model)
+						@foreach (var emprestimos in Model)
 						{
 							<tr>
-								<td>@grupoPorCepOrigem.SellerCEP</td>
-								<td>@grupoPorCepOrigem.Quantity</td>
+								<td>@emprestimos.SellerCEP</td>
+								<td>@emprestimos.Quantity</td>
 							</tr>
 						}
 					}

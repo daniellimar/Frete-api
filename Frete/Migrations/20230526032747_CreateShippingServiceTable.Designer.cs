@@ -4,6 +4,7 @@ using Frete.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Frete.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230526032747_CreateShippingServiceTable")]
+    partial class CreateShippingServiceTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,8 +62,9 @@ namespace Frete.Migrations
                     b.Property<decimal>("ShipmentInvoiceValue")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.Property<int>("ShippingServiceCode")
-                        .HasColumnType("int");
+                    b.Property<string>("ShippingServiceCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("Status")
                         .HasColumnType("bit");
@@ -78,7 +82,7 @@ namespace Frete.Migrations
                     b.ToTable("Cotacoes");
                 });
 
-            modelBuilder.Entity("Frete.Models.ShippingServiceModel", b =>
+            modelBuilder.Entity("Frete.Models.ShippingService", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,9 +97,8 @@ namespace Frete.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CarrierCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CarrierCode")
+                        .HasColumnType("int");
 
                     b.Property<string>("DeliveryTime")
                         .IsRequired()
@@ -119,9 +122,8 @@ namespace Frete.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ServiceCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ServiceCode")
+                        .HasColumnType("int");
 
                     b.Property<string>("ServiceDescription")
                         .IsRequired()

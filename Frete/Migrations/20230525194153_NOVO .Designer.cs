@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Frete.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230524182404_Initial")]
-    partial class Initial
+    [Migration("20230525194153_NOVO ")]
+    partial class NOVO
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,45 +33,49 @@ namespace Frete.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Altura")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("CepDestino")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CepOrigem")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CodigoServicoEnvio")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Comprimento")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("DataUltimaAtualizacao")
+                    b.Property<DateTime?>("DateLastUpdate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Largura")
+                    b.Property<decimal>("Height")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("Peso")
+                    b.Property<decimal>("Length")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("Quantidade")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Status")
+                    b.Property<string>("RecipientCEP")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecipientCountry")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SellerCEP")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("ShipmentInvoiceValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ShippingServiceCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Status")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("ValorRemessa")
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Width")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Frete");
+                    b.ToTable("Cotacoes");
                 });
 #pragma warning restore 612, 618
         }

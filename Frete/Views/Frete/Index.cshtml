@@ -1,103 +1,107 @@
 ﻿<div class="row">
-            <div class="col-sm-8">
-                <section class="mb-5 p-3">
-                    <h3 class="mb-3">Cálculo de Frete</h3>
-                     <form method="POST" action="/Frete/ConsultarFrete">
-                        <div class="g-3">
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                <label for="CepOrigem" class="form-label">CEP Origem</label>
-                            <input type="text" class="form-control" id="CepOrigem" name="CepOrigem" required value="04757020">
-                                </div>
-                                <div class="col-md-6">
-                                <label for="CepDestino" class="form-label">CEP Destino</label>
-                            <input type="text" class="form-control" id="CepDestino" name="CepDestino" required value="14270000">
-                                </div>
-                            </div>
-
-                            <hr />
-
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                <label for="ValorRemessa" class="form-label">Valor da Fatura - Remessa</label>
-
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" style="border-radius: 0px;">R$</span>
-                                        </div>
-                                <input type="text" class="form-control" id="ValorRemessa" name="ValorRemessa" required value="320.685">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                <label for="CodigoServicoEnvio" class="form-label">Código do Serviço de Envio</label>
-                            <input type="text" class="form-control" id="CodigoServicoEnvio" name="CodigoServicoEnvio" value="null">
-                                </div>
-                            </div>
-
-                            <hr />
-
-                            <!-- Item de envio -->
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                <label for="Altura" class="form-label">Altura</label>
-                            <input type="text" class="form-control" id="Altura" name="Altura" required value="2">
-                                </div>
-                                <div class="col-md-4">
-                                <label for="Comprimento" class="form-label">Comprimento</label>
-                            <input type="text" class="form-control" id="Comprimento" name="Comprimento" required value="15">
-                                </div>
-                                <div class="col-md-4">
-                                <label for="Largura" class="form-label">Largura</label>
-                            <input type="text" class="form-control" id="Largura" name="Largura" required value="29">
-                                </div>
-                            </div>
-
-                            <hr />
-
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                <label for="Peso" class="form-label">Peso</label>
-                            <input type="text" class="form-control" id="Peso" name="Peso" required value="0.5">
-                                </div>
-                                <div class="col-md-6">
-                                <label for="Quantidade" class="form-label">Quantidade</label>
-                                <input type="text" class="form-control" id="Quantidade" name="Quantidade" required value="2">
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                            <button type="submit" class="btn btn-outline-success w-100 fw-bold" id="btn_salvar">
-                                <i class="fa fa-truck" aria-hidden="true"></i>
-                                Calcular
-                            </button>
-                            </div>
-                        </div>
-                    </form>
-                </section>
-            </div>
-            <div class="col-sm-4">
-                <section class="mb-5 p-3">
-                    <h3 class="mb-3">Histórico de Cotações</h3>
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">Cep <small>(Origem)</small></th>
-                                <th scope="col">Cotações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model != null)
-                            {
-                                @foreach (var grupoPorCepOrigem in Model)
-                                {
-                                    <tr>
-                                        <td>@grupoPorCepOrigem.CepOrigem</td>
-                                        <td>@grupoPorCepOrigem.Quantidade</td>
-                                    </tr>
-                                }
-                            }
-                        </tbody>
-                    </table>
-                </section>
-            </div>
-        </div>
+	<div class="col-sm-8">
+		<section class="mb-5 p-3">
+			<h3 class="mb-3">Cálculo de Frete</h3>
+			<form method="POST" action="/Frete/ConsultarFrete">
+				<div class="g-3">
+					<div class="row mb-4">
+						<div class="col-md-6">
+							<label for="SellerCEP" class="form-label">CEP Origem</label>
+							<input type="text" class="form-control" id="SellerCEP" name="SellerCEP" required value="04757020">
+						</div>
+						<div class="col-md-6">
+							<label for="RecipientCEP" class="form-label">CEP Destino</label>
+							<input type="text" class="form-control" id="RecipientCEP" name="RecipientCEP" required value="14270000">
+						</div>
+					</div>
+					<hr />
+					<div class="row mb-4">
+						<div class="col-md-6">
+							<label for="ShipmentInvoiceValue" class="form-label">Valor da Fatura - Remessa</label>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" style="border-radius: 0px;">R$</span>
+								</div>
+								<input type="text" class="form-control" id="ShipmentInvoiceValue" name="ShipmentInvoiceValue" required value="320.685">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label for="ShippingServiceCode" class="form-label">Código do Serviço de Envio</label>
+							<input type="text" class="form-control" id="ShippingServiceCode" name="ShippingServiceCode" value="null">
+						</div>
+					</div>
+					<hr />
+					<div class="row mb-4">
+						<div class="col-md-4">
+							<label for="Height" class="form-label">Altura</label>
+							<input type="text" class="form-control" id="Height" name="Height" required value="2">
+						</div>
+						<div class="col-md-4">
+							<label for="Height" class="form-label">Comprimento</label>
+							<input type="text" class="form-control" id="Height" name="Height" required value="15">
+						</div>
+						<div class="col-md-4">
+							<label for="Width" class="form-label">Largura</label>
+							<input type="text" class="form-control" id="Width" name="Width" required value="29">
+						</div>
+					</div>
+					<hr />
+					<div class="row mb-4">
+						<div class="col-md-6">
+							<label for="Weight" class="form-label">Peso</label>
+							<input type="text" class="form-control" id="Weight" name="Weight" required value="0.5">
+						</div>
+						<div class="col-md-6">
+							<label for="Quantity" class="form-label">Quantidade</label>
+							<input type="text" class="form-control" id="Quantity" name="Quantity" required value="2">
+						</div>
+					</div>
+					<hr />
+					<div class="row mb-4">
+						<div class="col-md-6">
+							<label for="RecipientCountry" class="form-label">País destinatário</label>
+							<select class="form-control" id="RecipientCountry" name="RecipientCountry">
+								<option value="BR">Brazil</option>
+								<option value="US">United States</option>
+								<option value="CN">China</option>
+								<option value="JP">Japan</option>
+								<option value="DE">Germany</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-12">
+						<button type="submit" class="btn btn-outline-success w-100 fw-bold" id="btn_salvar">
+							<i class="fa fa-truck" aria-hidden="true"></i>
+							Calcular
+						</button>
+					</div>
+				</div>
+			</form>
+		</section>
+	</div>
+	<div class="col-sm-4">
+		<section class="mb-5 p-3">
+			<h3 class="mb-3">Histórico de Cotações</h3>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th scope="col">Cep <small>(Origem)</small></th>
+						<th scope="col">Cotações</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (Model != null)
+					{
+						@foreach (var grupoPorCepOrigem in Model)
+						{
+							<tr>
+								<td>@grupoPorCepOrigem.SellerCEP</td>
+								<td>@grupoPorCepOrigem.Quantity</td>
+							</tr>
+						}
+					}
+				</tbody>
+			</table>
+		</section>
+	</div>
+</div>

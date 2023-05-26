@@ -9,9 +9,8 @@ using System.Text;
 
 namespace Frete.Controllers
 {
-
-    public class FreteController : Controller
-    {
+	public class FreteController : Controller
+	{
         private const string ConnectionString = "DefaultConnection";
         readonly private ApplicationDbContext _db;
         public FreteController(ApplicationDbContext db)
@@ -21,9 +20,9 @@ namespace Frete.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<FreteModel> emprestimos = _db.Frete;
-            var gruposPorCepOrigem = emprestimos.GroupBy(e => e.CepOrigem)
-                                    .Select(g => new { CepOrigem = g.Key, CepDestino = g.Select(e => e.CepDestino), Quantidade = g.Count() });
+            IEnumerable<FreteModel> emprestimos = _db.Cotacoes;
+            var gruposPorCepOrigem = emprestimos.GroupBy(e => e.SellerCEP)
+                                    .Select(g => new { SellerCEP = g.Key, CepDestino = g.Select(e => e.RecipientCEP), Quantity = g.Count() });
 
             return View(gruposPorCepOrigem);
         }
@@ -42,15 +41,15 @@ namespace Frete.Controllers
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    command.Parameters.AddWithValue("@CepOrigem", formulario.CepOrigem);
-                    command.Parameters.AddWithValue("@CepDestino", formulario.CepDestino);
-                    command.Parameters.AddWithValue("@CodigoServicoEnvio", formulario.CodigoServicoEnvio);
-                    command.Parameters.AddWithValue("@ValorRemessa", formulario.ValorRemessa);
-                    command.Parameters.AddWithValue("@Largura", formulario.Largura);
-                    command.Parameters.AddWithValue("@Comprimento", formulario.Comprimento);
-                    command.Parameters.AddWithValue("@Altura", formulario.Altura);
-                    command.Parameters.AddWithValue("@Peso", formulario.Peso);
-                    command.Parameters.AddWithValue("@Quantidade", formulario.Quantidade);
+                    command.Parameters.AddWithValue("@CepOrigem", formulario.SellerCEP);
+                    command.Parameters.AddWithValue("@CepDestino", formulario.RecipientCEP);
+                    command.Parameters.AddWithValue("@CodigoServicoEnvio", formulario.ShippingServiceCode);
+                    command.Parameters.AddWithValue("@ValorRemessa", formulario.ShipmentInvoiceValue);
+                    command.Parameters.AddWithValue("@Largura", formulario.Width);
+                    command.Parameters.AddWithValue("@Comprimento", formulario.Length);
+                    command.Parameters.AddWithValue("@Altura", formulario.Height);
+                    command.Parameters.AddWithValue("@Peso", formulario.Weight);
+                    command.Parameters.AddWithValue("@Quantidade", formulario.Quantity);
 
                     connection.Open();
                     command.ExecuteNonQuery();
@@ -66,14 +65,10 @@ namespace Frete.Controllers
                 {
                     string responseContent = await response.Content.ReadAsStringAsync();
                     TempData["RespostaAPI"] = responseContent;
+                    return RedirectToAction("Cotacao");
                 }
-                else
-                {
-                    // Lidar com o caso em que a requisição não foi bem-sucedida
-                    // ...
-                }
+                return RedirectToAction("Error");
             }
-            return RedirectToAction("Cotacao");
         }
         public IActionResult Cotacao()
         {
@@ -83,7 +78,7 @@ namespace Frete.Controllers
             {
                 var dados = JsonConvert.DeserializeObject<dynamic>(respostaAPI);
                 var jsonArrayString = (JArray)dados.ShippingSeviceAvailableArray;
-                List<Frete.Models.ShippingService> shippingServices = jsonArrayString.ToObject<List<Frete.Models.ShippingService>>();
+                List<ShippingService> shippingServices = jsonArrayString.ToObject<List<Frete.Models.ShippingService>>();
 
                 return View(shippingServices);
             }
@@ -97,31 +92,53 @@ namespace Frete.Controllers
                 return BadRequest();
             }
 
-            using (HttpClient client = new HttpClient())
+			using (var connection = new SqlConnection("server=DANIELLIMA\\SQLEXPRESS; Database=Frete; trusted_connection=true; TrustServerCertificate=True;"))
+			{
+				using (var command = new SqlCommand("dbo.InsertCotacao", connection))
+				{
+					command.CommandType = CommandType.StoredProcedure;
+
+					command.Parameters.AddWithValue("@SellerCEP", formulario.SellerCEP);
+					command.Parameters.AddWithValue("@RecipientCEP", formulario.RecipientCEP);
+					command.Parameters.AddWithValue("@ShippingServiceCode", formulario.ShippingServiceCode);
+					command.Parameters.AddWithValue("@ShipmentInvoiceValue", formulario.ShipmentInvoiceValue);
+					command.Parameters.AddWithValue("@Width", formulario.Width);
+					command.Parameters.AddWithValue("@Length", formulario.Length);
+					command.Parameters.AddWithValue("@Height", formulario.Height);
+					command.Parameters.AddWithValue("@Weight", formulario.Weight);
+					command.Parameters.AddWithValue("@Quantity", formulario.Quantity);
+					command.Parameters.AddWithValue("@RecipientCountry", formulario.RecipientCountry);
+
+				    connection.Open();
+				    command.ExecuteNonQuery();
+			    }
+			}
+
+			using (HttpClient client = new HttpClient())
             {
                 string apiUrl = "https://api.frenet.com.br/shipping/quote";
 
                 var requestData = new
                 {
-                    SellerCEP = formulario.CepOrigem,
-                    RecipientCEP = formulario.CepDestino,
-                    ShipmentInvoiceValue = formulario.ValorRemessa,
-                    Quantity = formulario.Quantidade,
+                    SellerCEP = formulario.SellerCEP,
+                    RecipientCEP = formulario.RecipientCEP,
+                    ShipmentInvoiceValue = formulario.ShipmentInvoiceValue,
+                    Quantity = formulario.Quantity,
                     ShippingServiceCode = (string)null,
                     ShippingItemArray = new[]
                     {
                         new
                         {
-                            Height = formulario.Altura,
-                            Length = formulario.Comprimento,
-                            Weight = formulario.Peso,
-                            Width = formulario.Largura,
+                            Height = formulario.Width,
+                            Length = formulario.Length,
+                            Weight = formulario.Weight,
+                            Width = formulario.Width,
                         }
                     },
-                    RecipientCountry = "BR"
-                };
+                    RecipientCountry = formulario.RecipientCountry
+				};
 
-                string requestJson = JsonConvert.SerializeObject(requestData);
+				string requestJson = JsonConvert.SerializeObject(requestData);
                 var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
                 
                 content.Headers.Add("Token", "B9CDA873RC7ACR4864R9E36R03EFF0B7C4B7");
@@ -129,8 +146,7 @@ namespace Frete.Controllers
                 content.Headers.Add("senha", "A652T4gjQIJIFBrxwd4FQ==");
 
                 HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-
-                if (response.IsSuccessStatusCode)
+				if (response.IsSuccessStatusCode)
                 {
                     string responseContent = await response.Content.ReadAsStringAsync();
                     TempData["RespostaAPIQUOTA"] = responseContent;

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Frete.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Shipping : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,10 +46,10 @@ namespace Frete.Migrations
                     Carrier = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CarrierCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShippingPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    DeliveryTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DeliveryTime = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Error = table.Column<bool>(type: "bit", nullable: false),
-                    Msg = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OriginalDeliveryTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Msg = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OriginalDeliveryTime = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OriginalShippingPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     ResponseTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AllowBuyLabel = table.Column<bool>(type: "bit", nullable: false)

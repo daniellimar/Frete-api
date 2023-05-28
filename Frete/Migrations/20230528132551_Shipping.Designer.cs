@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Frete.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230526042515_Initial")]
-    partial class Initial
+    [Migration("20230528132551_Shipping")]
+    partial class Shipping
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -105,98 +105,55 @@ namespace Frete.Controllers
                 HttpResponseMessage response = await client.PostAsync(apiUrl, content);
 				if (response.IsSuccessStatusCode)
                 {
-                    string responseContent = await response.Content.ReadAsStringAsync();
+					string responseContent = await response.Content.ReadAsStringAsync();
                     TempData["RespostaAPIQUOTA"] = responseContent;
-					//return Ok(responseContent);
 
-
-
-					string connectionString = "server=DANIELLIMA\\SQLEXPRESS; Database=Frete; trusted_connection=true; TrustServerCertificate=True;"; // Replace with your actual connection string
-
-					using (SqlConnection connection = new SqlConnection(connectionString))
+					if (!string.IsNullOrEmpty(responseContent))
 					{
-						connection.Open();
+						var responseObj = JsonConvert.DeserializeObject<ShippingServiceResponse>(responseContent);
 
-						// Parse the JSON response
-						JObject responseObject = JObject.Parse(responseContent);
-
-						// Get the arrays of items from the response
-						JArray serviceCodeArray = responseObject["ServiceCode"] as JArray;
-						JArray serviceDescriptionArray = responseObject["ServiceDescription"] as JArray;
-						JArray carrierArray = responseObject["Carrier"] as JArray;
-						JArray carrierCodeArray = responseObject["CarrierCode"] as JArray;
-						JArray shippingPriceArray = responseObject["ShippingPrice"] as JArray;
-						JArray deliveryTimeArray = responseObject["DeliveryTime"] as JArray;
-						JArray errorArray = responseObject["Error"] as JArray;
-						JArray originalDeliveryTimeArray = responseObject["OriginalDeliveryTime"] as JArray;
-						JArray originalShippingPriceArray = responseObject["OriginalShippingPrice"] as JArray;
-						JArray responseTimeArray = responseObject["ResponseTime"] as JArray;
-						JArray allowBuyLabelArray = responseObject["AllowBuyLabel"] as JArray;
-
-						if (serviceCodeArray != null && serviceDescriptionArray != null && carrierArray != null && carrierCodeArray != null &&
-							shippingPriceArray != null && deliveryTimeArray != null && errorArray != null && originalDeliveryTimeArray != null &&
-							originalShippingPriceArray != null && responseTimeArray != null && allowBuyLabelArray != null)
+						if (responseObj != null && responseObj.ShippingSevicesArray != null)
 						{
-							// Iterate over each item in the arrays
-							for (int i = 0; i < serviceCodeArray.Count; i++)
+							foreach (var shippingService in responseObj.ShippingSevicesArray)
 							{
-								using (SqlCommand command = new SqlCommand("InsertShippingService", connection))
-								{
-									command.CommandType = CommandType.StoredProcedure;
-
-									// Extract values from the arrays
-									string serviceCode = (string)serviceCodeArray[i];
-									string serviceDescription = (string)serviceDescriptionArray[i];
-									string carrier = (string)carrierArray[i];
-									string carrierCode = (string)carrierCodeArray[i];
-									decimal shippingPrice = (decimal)shippingPriceArray[i];
-									int deliveryTime = (int)deliveryTimeArray[i];
-									bool error = (bool)errorArray[i];
-									string originalDeliveryTime = (string)originalDeliveryTimeArray[i];
-									string originalShippingPrice = (string)originalShippingPriceArray[i];
-									string responseTime = (string)responseTimeArray[i];
-									bool allowBuyLabel = (bool)allowBuyLabelArray[i];
-
-									// Add parameters
-									command.Parameters.AddWithValue("@ServiceCode", serviceCode);
-									command.Parameters.AddWithValue("@ServiceDescription", serviceDescription);
-									command.Parameters.AddWithValue("@Carrier", carrier);
-									command.Parameters.AddWithValue("@CarrierCode", carrierCode);
-									command.Parameters.AddWithValue("@ShippingPrice", shippingPrice);
-									command.Parameters.AddWithValue("@DeliveryTime", deliveryTime);
-									command.Parameters.AddWithValue("@Error", error);
-									command.Parameters.AddWithValue("@Msg", string.Empty); // Since there's no "Msg" property in the JSON structure
-									command.Parameters.AddWithValue("@OriginalDeliveryTime", originalDeliveryTime);
-									command.Parameters.AddWithValue("@OriginalShippingPrice", originalShippingPrice);
-									command.Parameters.AddWithValue("@ResponseTime", responseTime);
-									command.Parameters.AddWithValue("@AllowBuyLabel", allowBuyLabel);
-
-									// Execute the command
-									object result = command.ExecuteScalar();
-
-									// Check the result
-									if (result != null && result != DBNull.Value)
-									{
-										int shippingServiceID = Convert.ToInt32(result);
-										// Handle the inserted ShippingServiceID as needed
-									}
-								}
+                                //return Ok(shippingService);
+								InsertShippingService(shippingService);
 							}
 						}
-						else
-						{
-							// Handle the case when any of the arrays are not found in the JSON response
-						}
 					}
-
-
-
 					return RedirectToAction("CotacaoResponse");
                 }
                 return RedirectToAction("Error");
             }
-        }
-        public IActionResult CotacaoResponse()
+		}
+		private void InsertShippingService(ShippingServiceModel shippingService)
+		{
+			string connectionString = "server=DANIELLIMA\\SQLEXPRESS; Database=Frete; trusted_connection=true; TrustServerCertificate=True;"; // Replace with your actual connection string
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+
+				using (SqlCommand command = new SqlCommand("InsertShippingService", connection))
+				{
+					command.CommandType = System.Data.CommandType.StoredProcedure;
+					command.Parameters.AddWithValue("@ServiceCode", shippingService.ServiceCode);
+					command.Parameters.AddWithValue("@ServiceDescription", shippingService.ServiceDescription);
+					command.Parameters.AddWithValue("@Carrier", shippingService.Carrier);
+					command.Parameters.AddWithValue("@CarrierCode", shippingService.CarrierCode);
+					command.Parameters.AddWithValue("@ShippingPrice", shippingService.ShippingPrice);
+					command.Parameters.AddWithValue("@DeliveryTime", shippingService.DeliveryTime == null ? "0" : shippingService.DeliveryTime);
+					command.Parameters.AddWithValue("@Error", shippingService.Error);
+                    command.Parameters.AddWithValue("@Msg", shippingService.Msg == null ? "0" : shippingService.Msg);
+					command.Parameters.AddWithValue("@OriginalDeliveryTime", shippingService.OriginalDeliveryTime == null ? "0" : shippingService.OriginalDeliveryTime);
+					command.Parameters.AddWithValue("@OriginalShippingPrice", shippingService.OriginalShippingPrice);
+					command.Parameters.AddWithValue("@ResponseTime", shippingService.ResponseTime);
+					command.Parameters.AddWithValue("@AllowBuyLabel", shippingService.AllowBuyLabel);
+
+					command.ExecuteNonQuery();
+				}
+			}
+		}
+		public IActionResult CotacaoResponse()
         {
             var jsonString = TempData["RespostaAPIQUOTA"] as string;
 
@@ -217,5 +174,5 @@ namespace Frete.Controllers
         {
             return View();
         }
-    }
+	}
 }

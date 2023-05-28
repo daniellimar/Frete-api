@@ -45,24 +45,23 @@ IF OBJECT_ID('InsertShippingService', 'P') IS NOT NULL
     DROP PROCEDURE InsertShippingService;
 
 CREATE PROCEDURE InsertShippingService
-(
-    @ServiceCode VARCHAR(50),
-    @ServiceDescription VARCHAR(100),
-    @Carrier VARCHAR(100),
-    @CarrierCode VARCHAR(50),
+    @ServiceCode NVARCHAR(50),
+    @ServiceDescription NVARCHAR(50),
+    @Carrier NVARCHAR(50),
+    @CarrierCode NVARCHAR(50),
     @ShippingPrice DECIMAL(10, 2),
-    @DeliveryTime INT,
+    @DeliveryTime NVARCHAR(50),
     @Error BIT,
-    @Msg VARCHAR(100),
-    @OriginalDeliveryTime VARCHAR(50),
-    @OriginalShippingPrice VARCHAR(50),
-    @ResponseTime VARCHAR(50),
+    @Msg NVARCHAR(MAX),
+    @OriginalDeliveryTime NVARCHAR(50),
+    @OriginalShippingPrice DECIMAL(10, 2),
+    @ResponseTime NVARCHAR(50),
     @AllowBuyLabel BIT
-)
 AS
 BEGIN
-    INSERT INTO ShippingService
-    (
+    SET @Msg = ISNULL(@Msg, 'FALSE') -- Define 'FALSE' se @Msg for NULL
+
+    INSERT INTO ShippingService (
         ServiceCode,
         ServiceDescription,
         Carrier,
@@ -76,8 +75,7 @@ BEGIN
         ResponseTime,
         AllowBuyLabel
     )
-    VALUES
-    (
+    VALUES (
         @ServiceCode,
         @ServiceDescription,
         @Carrier,

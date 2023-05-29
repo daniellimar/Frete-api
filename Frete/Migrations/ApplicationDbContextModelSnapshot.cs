@@ -22,7 +22,7 @@ namespace Frete.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Frete.Models.FreteModel", b =>
+            modelBuilder.Entity("Frete.Models.CotacaoModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,9 +62,6 @@ namespace Frete.Migrations
                     b.Property<int>("ShippingServiceCode")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("Status")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Weight")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -75,7 +72,7 @@ namespace Frete.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cotacoes");
+                    b.ToTable("Cotacao");
                 });
 
             modelBuilder.Entity("Frete.Models.ShippingServiceModel", b =>
@@ -97,9 +94,11 @@ namespace Frete.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DeliveryTime")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CotacaoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DeliveryTime")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Error")
                         .HasColumnType("bit");
@@ -108,9 +107,8 @@ namespace Frete.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OriginalDeliveryTime")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("OriginalDeliveryTime")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("OriginalShippingPrice")
                         .HasColumnType("decimal(10, 2)");

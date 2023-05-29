@@ -1,92 +1,62 @@
 IF OBJECT_ID('InsertCotacao', 'P') IS NOT NULL
     DROP PROCEDURE InsertCotacao;
 
-CREATE PROCEDURE InsertCotacao
+CREATE PROCEDURE dbo.InsertCotacao
     @SellerCEP VARCHAR(50),
-    @RecipientCountry VARCHAR(50),
-    @ShippingServiceCode VARCHAR(50),
-    @Width DECIMAL(18,2),
-    @ShipmentInvoiceValue DECIMAL(18,2),
-    @Length DECIMAL(18,2),
-    @Height DECIMAL(18,2),
-    @Weight DECIMAL(18,2),
+    @RecipientCEP VARCHAR(50),
+    @ShippingServiceCode INT,
+    @ShipmentInvoiceValue DECIMAL(10, 2),
+    @Width VARCHAR(50),
+    @Length VARCHAR(50),
+    @Height VARCHAR(50),
+    @Weight VARCHAR(50),
     @Quantity INT,
-    @RecipientCEP VARCHAR(50)
+    @RecipientCountry VARCHAR(100),
+    @DateLastUpdate DateTime,
+    @InsertedId INT OUTPUT
 AS
 BEGIN
-    INSERT INTO [dbo].[Cotacoes] (
-        [SellerCEP],
-        [RecipientCountry],
-        [ShippingServiceCode],
-        [Width],
-        [ShipmentInvoiceValue],
-        [Length],
-        [Height],
-        [Weight],
-        [Quantity],
-        [RecipientCEP]
-    )
-    VALUES (
-        @SellerCEP,
-        @RecipientCountry,
-        @ShippingServiceCode,
-        @Width,
-        @ShipmentInvoiceValue,
-        @Length,
-        @Height,
-        @Weight,
-        @Quantity,
-        @RecipientCEP
-    )
+    -- Inserir o registro na tabela Cotacoes
+    INSERT INTO [Frete].[dbo].[Cotacao] (SellerCEP, RecipientCEP, ShippingServiceCode, ShipmentInvoiceValue, Width, Length, Height, Weight, Quantity, RecipientCountry, DateLastUpdate)
+    VALUES (@SellerCEP, @RecipientCEP, @ShippingServiceCode, @ShipmentInvoiceValue, @Width, @Length, @Height, @Weight, @Quantity, @RecipientCountry, @DateLastUpdate)
+
+    -- Retornar o ID do registro inserido
+    SET @InsertedId = SCOPE_IDENTITY()
 END
 
+---------------------------------------------------------------------------------------
 
 IF OBJECT_ID('InsertShippingService', 'P') IS NOT NULL
     DROP PROCEDURE InsertShippingService;
 
-CREATE PROCEDURE InsertShippingService
-    @ServiceCode NVARCHAR(50),
-    @ServiceDescription NVARCHAR(50),
-    @Carrier NVARCHAR(50),
-    @CarrierCode NVARCHAR(50),
+CREATE PROCEDURE dbo.InsertShippingService
+    @CotacaoId INT,
+    @ServiceCode VARCHAR(50),
+    @ServiceDescription VARCHAR(100),
+    @Carrier VARCHAR(100),
+    @CarrierCode VARCHAR(50),
     @ShippingPrice DECIMAL(10, 2),
-    @DeliveryTime NVARCHAR(50),
+    @DeliveryTime INT,
     @Error BIT,
-    @Msg NVARCHAR(MAX),
-    @OriginalDeliveryTime NVARCHAR(50),
+    @Msg VARCHAR(100),
+    @OriginalDeliveryTime INT,
     @OriginalShippingPrice DECIMAL(10, 2),
-    @ResponseTime NVARCHAR(50),
+    @ResponseTime VARCHAR(50),
     @AllowBuyLabel BIT
 AS
 BEGIN
-    SET @Msg = ISNULL(@Msg, 'FALSE') -- Define 'FALSE' se @Msg for NULL
-
-    INSERT INTO ShippingService (
-        ServiceCode,
-        ServiceDescription,
-        Carrier,
-        CarrierCode,
-        ShippingPrice,
-        DeliveryTime,
-        Error,
-        Msg,
-        OriginalDeliveryTime,
-        OriginalShippingPrice,
-        ResponseTime,
-        AllowBuyLabel
-    )
-    VALUES (
-        @ServiceCode,
-        @ServiceDescription,
-        @Carrier,
-        @CarrierCode,
-        @ShippingPrice,
-        @DeliveryTime,
-        @Error,
-        @Msg,
-        @OriginalDeliveryTime,
-        @OriginalShippingPrice,
-        @ResponseTime,
-        @AllowBuyLabel
-    )
+    -- Inserir o registro na tabela ShippingService
+    INSERT INTO [Frete].[dbo].[ShippingService] (CotacaoId, ServiceCode, ServiceDescription, Carrier, CarrierCode, ShippingPrice, DeliveryTime, Error, Msg, OriginalDeliveryTime, OriginalShippingPrice, ResponseTime, AllowBuyLabel)
+    VALUES (@CotacaoId, @ServiceCode, @ServiceDescription, @Carrier, @CarrierCode, @ShippingPrice, @DeliveryTime, @Error, @Msg, @OriginalDeliveryTime, @OriginalShippingPrice, @ResponseTime, @AllowBuyLabel)
 END
+
+
+---------------------------------------------------------------------------------------
+
+ALTER TABLE [Frete].[dbo].[ShippingService]
+ADD [CotacoesId] INT;
+
+ALTER TABLE [Frete].[dbo].[ShippingService]
+ADD CONSTRAINT [FK_ShippingService_Cotacoes]
+FOREIGN KEY ([CotacoesId]) REFERENCES [Frete].[dbo].[Cotacoes] ([Id]);
+

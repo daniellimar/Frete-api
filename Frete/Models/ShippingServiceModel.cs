@@ -6,6 +6,7 @@ namespace Frete.Models
     public class ShippingServiceModel
 	{
 		public int Id { get; set; }
+		public int CotacaoId { get; set; }
 		public string ServiceCode { get; set; }
 		public string ServiceDescription { get; set; }
         public string Carrier { get; set; }
@@ -13,10 +14,10 @@ namespace Frete.Models
 
 		[Column(TypeName = "decimal(10, 2)")]
 		public decimal ShippingPrice { get; set; }
-        public string DeliveryTime { get; set; }
+        public int DeliveryTime { get; set; }
         public bool Error { get; set; }
         public string Msg { get; set; }
-        public string OriginalDeliveryTime { get; set; }
+        public int OriginalDeliveryTime { get; set; }
 
 		[Column(TypeName = "decimal(10, 2)")]
 		public decimal OriginalShippingPrice { get; set; }

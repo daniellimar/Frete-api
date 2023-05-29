@@ -21,14 +21,14 @@ namespace Frete.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<FreteModel> emprestimos = _db.Cotacoes;
+            IEnumerable<CotacaoModel> emprestimos = _db.Cotacao;
             return View();
         }
         public IActionResult Cotacao()
-        {
-            string respostaAPI = TempData["RespostaAPI"] as string;
+		{
+			string respostaAPI = TempData["RespostaAPI"] as string;
 
-            if (!string.IsNullOrEmpty(respostaAPI))
+			if (!string.IsNullOrEmpty(respostaAPI))
             {
                 var dados = JsonConvert.DeserializeObject<dynamic>(respostaAPI);
                 var jsonArrayString = (JArray)dados.ShippingSeviceAvailableArray;
@@ -39,17 +39,16 @@ namespace Frete.Controllers
             return RedirectToAction("Error");
         }
 
-        public async Task<ActionResult> ConsultarFrete(FreteModel formulario)
+        public async Task<ActionResult> ConsultarFrete(CotacaoModel formulario)
         {
             if (formulario is null)
             {
                 return BadRequest();
             }
 
-            //return Ok(formulario);
-
 			using (var connection = new SqlConnection("server=DANIELLIMA\\SQLEXPRESS; Database=Frete; trusted_connection=true; TrustServerCertificate=True;"))
 			{
+				connection.Open();
 				using (var command = new SqlCommand("dbo.InsertCotacao", connection))
 				{
 					command.CommandType = CommandType.StoredProcedure;
@@ -64,12 +63,17 @@ namespace Frete.Controllers
 					command.Parameters.AddWithValue("@Weight", formulario.Weight);
 					command.Parameters.AddWithValue("@Quantity", formulario.Quantity);
 					command.Parameters.AddWithValue("@RecipientCountry", formulario.RecipientCountry);
+					command.Parameters.AddWithValue("@DateLastUpdate", DateTime.Now);
 
-				    connection.Open();
-				    command.ExecuteNonQuery();
-			    }
+					var insertedIdParam = new SqlParameter("@InsertedId", SqlDbType.Int);
+					insertedIdParam.Direction = ParameterDirection.Output;
+					command.Parameters.Add(insertedIdParam);
+					command.ExecuteNonQuery();
+
+					var IdCotacao = (int)insertedIdParam.Value;
+					TempData["IdCotacao"] = IdCotacao;
+				}
 			}
-
 
 			using (HttpClient client = new HttpClient())
             {
@@ -135,20 +139,26 @@ namespace Frete.Controllers
 
 				using (SqlCommand command = new SqlCommand("InsertShippingService", connection))
 				{
+					int idCotacao = (int)TempData["IdCotacao"];
+
 					command.CommandType = System.Data.CommandType.StoredProcedure;
+					command.Parameters.AddWithValue("@CotacaoId", idCotacao);
 					command.Parameters.AddWithValue("@ServiceCode", shippingService.ServiceCode);
 					command.Parameters.AddWithValue("@ServiceDescription", shippingService.ServiceDescription);
 					command.Parameters.AddWithValue("@Carrier", shippingService.Carrier);
 					command.Parameters.AddWithValue("@CarrierCode", shippingService.CarrierCode);
 					command.Parameters.AddWithValue("@ShippingPrice", shippingService.ShippingPrice);
-					command.Parameters.AddWithValue("@DeliveryTime", shippingService.DeliveryTime == null ? "0" : shippingService.DeliveryTime);
+					command.Parameters.AddWithValue("@DeliveryTime", shippingService.DeliveryTime == null ? 0 : shippingService.DeliveryTime);
 					command.Parameters.AddWithValue("@Error", shippingService.Error);
-                    command.Parameters.AddWithValue("@Msg", shippingService.Msg == null ? "0" : shippingService.Msg);
+                    command.Parameters.AddWithValue("@Msg", shippingService.Msg == null ? 0 : shippingService.Msg);
 					command.Parameters.AddWithValue("@OriginalDeliveryTime", shippingService.OriginalDeliveryTime == null ? "0" : shippingService.OriginalDeliveryTime);
 					command.Parameters.AddWithValue("@OriginalShippingPrice", shippingService.OriginalShippingPrice);
 					command.Parameters.AddWithValue("@ResponseTime", shippingService.ResponseTime);
 					command.Parameters.AddWithValue("@AllowBuyLabel", shippingService.AllowBuyLabel);
 
+					var insertedIdParam = new SqlParameter("@InsertedId", SqlDbType.Int);
+					insertedIdParam.Direction = ParameterDirection.Output;
+					command.Parameters.Add(insertedIdParam);
 					command.ExecuteNonQuery();
 				}
 			}

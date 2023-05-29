@@ -10,7 +10,7 @@ namespace Frete.Data
 
         }
 
-        public virtual DbSet<FreteModel> Cotacoes { get; set; }
+        public virtual DbSet<CotacaoModel> Cotacao { get; set; }
 		public virtual DbSet<ShippingServiceModel> ShippingService { get; set; }
 	}
 }

@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Frete.Migrations
 {
     /// <inheritdoc />
-    public partial class Shipping : Migration
+    public partial class FixStatus : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cotacoes",
+                name: "Cotacao",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -27,12 +27,11 @@ namespace Frete.Migrations
                     Weight = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     RecipientCountry = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: true),
                     DateLastUpdate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cotacoes", x => x.Id);
+                    table.PrimaryKey("PK_Cotacao", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -41,15 +40,16 @@ namespace Frete.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CotacaoId = table.Column<int>(type: "int", nullable: false),
                     ServiceCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ServiceDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Carrier = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CarrierCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShippingPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    DeliveryTime = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeliveryTime = table.Column<int>(type: "int", nullable: false),
                     Error = table.Column<bool>(type: "bit", nullable: false),
-                    Msg = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OriginalDeliveryTime = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Msg = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OriginalDeliveryTime = table.Column<int>(type: "int", nullable: false),
                     OriginalShippingPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     ResponseTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AllowBuyLabel = table.Column<bool>(type: "bit", nullable: false)
@@ -64,7 +64,7 @@ namespace Frete.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Cotacoes");
+                name: "Cotacao");
 
             migrationBuilder.DropTable(
                 name: "ShippingService");

@@ -4,7 +4,7 @@ using System.Data;
 
 namespace Frete.Models
 {
-	public class FreteModel
+	public class CotacaoModel
 	{
 		public int Id { get; set; }
 		public string SellerCEP { get; set; }
@@ -19,7 +19,6 @@ namespace Frete.Models
 		public string Weight { get; set; }
 		public int Quantity { get; set; }
 		public string RecipientCountry { get; set; }
-		public bool? Status { get; set; }
 		public DateTime? DateLastUpdate { get; set; } = DateTime.Now;
 	}
 }

@@ -62,9 +62,8 @@ namespace Frete.Migrations
                     b.Property<int>("ShippingServiceCode")
                         .HasColumnType("int");
 
-                    b.Property<string>("Weight")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(10, 3)");
 
                     b.Property<string>("Width")
                         .IsRequired()

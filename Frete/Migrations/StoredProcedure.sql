@@ -42,12 +42,16 @@ CREATE PROCEDURE dbo.InsertShippingService
     @OriginalDeliveryTime INT,
     @OriginalShippingPrice DECIMAL(10, 2),
     @ResponseTime VARCHAR(50),
-    @AllowBuyLabel BIT
+    @AllowBuyLabel BIT,
+    @InsertedId INT OUTPUT
 AS
 BEGIN
     -- Inserir o registro na tabela ShippingService
     INSERT INTO [Frete].[dbo].[ShippingService] (CotacaoId, ServiceCode, ServiceDescription, Carrier, CarrierCode, ShippingPrice, DeliveryTime, Error, Msg, OriginalDeliveryTime, OriginalShippingPrice, ResponseTime, AllowBuyLabel)
     VALUES (@CotacaoId, @ServiceCode, @ServiceDescription, @Carrier, @CarrierCode, @ShippingPrice, @DeliveryTime, @Error, @Msg, @OriginalDeliveryTime, @OriginalShippingPrice, @ResponseTime, @AllowBuyLabel)
+
+    -- Retornar o ID do registro inserido
+    SET @InsertedId = SCOPE_IDENTITY()
 END
 
 
@@ -60,3 +64,16 @@ ALTER TABLE [Frete].[dbo].[ShippingService]
 ADD CONSTRAINT [FK_ShippingService_Cotacoes]
 FOREIGN KEY ([CotacoesId]) REFERENCES [Frete].[dbo].[Cotacoes] ([Id]);
 
+
+---------------------------------------------------------------------------------------
+
+IF OBJECT_ID('GetCotacoesAgrupadas', 'P') IS NOT NULL
+    DROP PROCEDURE GetCotacoesAgrupadas;
+
+CREATE PROCEDURE GetCotacoesAgrupadas
+AS
+BEGIN
+    SELECT SellerCEP, COUNT(*) AS [Count]
+    FROM Cotacao
+    GROUP BY SellerCEP
+END

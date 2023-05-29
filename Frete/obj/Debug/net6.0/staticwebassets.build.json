@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "AOEuNkFucJxwlpTGXU3ve94+mV9TWbgfH9d7hRXMM/o=",
+  "Hash": "5gSMcQCuTNBLM/AUcF6IccqmcFHqL3BNf9JLt0G8zZQ=",
   "Source": "Frete",
   "BasePath": "_content/Frete",
   "Mode": "Default",
@@ -100,6 +100,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\logo.png"
+    },
+    {
+      "Identity": "C:\\Users\\danie\\projetos\\ASP NET CORE\\Frete\\Frete\\wwwroot\\js\\jquery.maskMoney.min.js",
+      "SourceId": "Frete",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\danie\\projetos\\ASP NET CORE\\Frete\\Frete\\wwwroot\\",
+      "BasePath": "_content/Frete",
+      "RelativePath": "js/jquery.maskMoney.min.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\jquery.maskMoney.min.js"
     },
     {
       "Identity": "C:\\Users\\danie\\projetos\\ASP NET CORE\\Frete\\Frete\\wwwroot\\js\\site.js",

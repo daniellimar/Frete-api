@@ -17,6 +17,10 @@
       "PackagePath": "staticwebassets\\img\\logo.png"
     },
     {
+      "Id": "C:\\Users\\danie\\projetos\\ASP NET CORE\\Frete\\Frete\\wwwroot\\js\\jquery.maskMoney.min.js",
+      "PackagePath": "staticwebassets\\js\\jquery.maskMoney.min.js"
+    },
+    {
       "Id": "C:\\Users\\danie\\projetos\\ASP NET CORE\\Frete\\Frete\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

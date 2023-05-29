@@ -1,17 +1,19 @@
 ﻿<div class="row">
 	<div class="col-sm-8">
 		<section class="mb-5 p-3">
-			<h3 class="mb-3">Cálculo de Frete</h3>
+			<h3 class="animate-slide-in mb-3">Cálculo de Frete</h3>
 			<form method="POST" action="/Frete/ConsultarFrete">
 				<div class="g-3">
 					<div class="row mb-4">
 						<div class="col-md-6">
 							<label for="SellerCEP" class="form-label">CEP Origem</label>
-							<input type="text" class="form-control" id="SellerCEP" name="SellerCEP" required value="04757020">
+							<input type="text" class="form-control" id="SellerCEP" name="SellerCEP" required value="04757020" maxlength="8">
+							<small id="SellerCEPHelp" class="form-text text-muted">Somente números.</small>
 						</div>
 						<div class="col-md-6">
 							<label for="RecipientCEP" class="form-label">CEP Destino</label>
-							<input type="text" class="form-control" id="RecipientCEP" name="RecipientCEP" required value="14270000">
+							<input type="text" class="form-control" id="RecipientCEP" name="RecipientCEP" required value="12345678" maxlength="8">
+							<small id="RecipientCEPHelp" class="form-text text-muted">Somente números.</small>
 						</div>
 					</div>
 					<hr />
@@ -22,7 +24,8 @@
 								<div class="input-group-prepend">
 									<span class="input-group-text" style="border-radius: 0px;">R$</span>
 								</div>
-								<input type="text" class="form-control" id="ShipmentInvoiceValue" name="ShipmentInvoiceValue" required value="320.685">
+
+								<input type="text" class="form-control real" id="ShipmentInvoiceValue" name="ShipmentInvoiceValue" required value="320.685" maxlength="12">
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -48,12 +51,12 @@
 					<hr />
 					<div class="row mb-4">
 						<div class="col-md-6">
-							<label for="Weight" class="form-label">Peso</label>
-							<input type="text" class="form-control" id="Weight" name="Weight" required value="0.5">
+							<label for="Weight" class="form-label">Peso(Kg)</label>
+							<input type="text" class="form-control peso" id="Weight" name="Weight" required value="0.5" maxlength="6">
 						</div>
 						<div class="col-md-6">
 							<label for="Quantity" class="form-label">Quantidade</label>
-							<input type="text" class="form-control" id="Quantity" name="Quantity" required value="2">
+							<input type="number" class="form-control" id="Quantity" name="Quantity" required value="2">
 						</div>
 					</div>
 					<hr />
@@ -96,7 +99,7 @@
 						{
 							<tr>
 								<td>@emprestimos.SellerCEP</td>
-								<td>@emprestimos.Quantity</td>
+								<td>@emprestimos.Count</td>
 							</tr>
 						}
 					}
@@ -105,3 +108,15 @@
 		</section>
 	</div>
 </div>
+<script>
+	$(".real").maskMoney({
+		thousands: '.',
+		decimal: ','
+	})
+	$(".peso").maskMoney({
+		thousands: '.',
+		decimal: ','
+	})
+</script>
+
+

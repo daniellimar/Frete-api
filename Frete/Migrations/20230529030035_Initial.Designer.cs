@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Frete.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230529013437_Fix Status")]
-    partial class FixStatus
+    [Migration("20230529030035_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,9 +65,8 @@ namespace Frete.Migrations
                     b.Property<int>("ShippingServiceCode")
                         .HasColumnType("int");
 
-                    b.Property<string>("Weight")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(10, 3)");
 
                     b.Property<string>("Width")
                         .IsRequired()

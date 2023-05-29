@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Frete.Migrations
 {
     /// <inheritdoc />
-    public partial class FixStatus : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,7 +24,7 @@ namespace Frete.Migrations
                     Width = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Length = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Height = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Weight = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Weight = table.Column<decimal>(type: "decimal(10,3)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     RecipientCountry = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateLastUpdate = table.Column<DateTime>(type: "datetime2", nullable: true)

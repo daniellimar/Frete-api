@@ -2,6 +2,7 @@
 using Frete.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Data;
@@ -19,12 +20,36 @@ namespace Frete.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
-        {
-            IEnumerable<CotacaoModel> emprestimos = _db.Cotacao;
-            return View();
-        }
-        public IActionResult Cotacao()
+		public async Task<IActionResult> Index()
+		{
+			List<dynamic> cotacoesAgrupadas = new List<dynamic>();
+			
+			using (var connection = new SqlConnection("server=DANIELLIMA\\SQLEXPRESS; Database=Frete; trusted_connection=true; TrustServerCertificate=True;"))
+			{
+				await connection.OpenAsync();
+
+				using (var command = new SqlCommand("GetCotacoesAgrupadas", connection))
+				{
+					command.CommandType = CommandType.StoredProcedure;
+
+					using (var reader = await command.ExecuteReaderAsync())
+					{
+						while (await reader.ReadAsync())
+						{
+							var item = new
+							{
+								SellerCEP = reader.GetString(0),
+								Count = reader.GetInt32(1)
+							};
+
+							cotacoesAgrupadas.Add(item);
+						}
+					}
+				}
+			}
+			return View(cotacoesAgrupadas);
+		}
+		public IActionResult Cotacao()
 		{
 			string respostaAPI = TempData["RespostaAPI"] as string;
 
@@ -120,7 +145,6 @@ namespace Frete.Controllers
 						{
 							foreach (var shippingService in responseObj.ShippingSevicesArray)
 							{
-                                //return Ok(shippingService);
 								InsertShippingService(shippingService);
 							}
 						}

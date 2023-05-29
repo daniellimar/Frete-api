@@ -16,7 +16,8 @@ namespace Frete.Models
 		public string Width { get; set; }
 		public string Length { get; set; }
 		public string Height { get; set; }
-		public string Weight { get; set; }
+		[Column(TypeName = "decimal(10, 3)")]
+		public decimal Weight { get; set; }
 		public int Quantity { get; set; }
 		public string RecipientCountry { get; set; }
 		public DateTime? DateLastUpdate { get; set; } = DateTime.Now;

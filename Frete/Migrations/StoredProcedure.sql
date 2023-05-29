@@ -1,3 +1,16 @@
+IF OBJECT_ID('GetCotacoesAgrupadas', 'P') IS NOT NULL
+    DROP PROCEDURE GetCotacoesAgrupadas;
+
+CREATE PROCEDURE GetCotacoesAgrupadas
+AS
+BEGIN
+    SELECT SellerCEP, COUNT(*) AS [Count]
+    FROM Cotacao
+    GROUP BY SellerCEP
+END
+
+---------------------------------------------------------------------------------------
+
 IF OBJECT_ID('InsertCotacao', 'P') IS NOT NULL
     DROP PROCEDURE InsertCotacao;
 
@@ -54,26 +67,4 @@ BEGIN
     SET @InsertedId = SCOPE_IDENTITY()
 END
 
-
 ---------------------------------------------------------------------------------------
-
-ALTER TABLE [Frete].[dbo].[ShippingService]
-ADD [CotacoesId] INT;
-
-ALTER TABLE [Frete].[dbo].[ShippingService]
-ADD CONSTRAINT [FK_ShippingService_Cotacoes]
-FOREIGN KEY ([CotacoesId]) REFERENCES [Frete].[dbo].[Cotacoes] ([Id]);
-
-
----------------------------------------------------------------------------------------
-
-IF OBJECT_ID('GetCotacoesAgrupadas', 'P') IS NOT NULL
-    DROP PROCEDURE GetCotacoesAgrupadas;
-
-CREATE PROCEDURE GetCotacoesAgrupadas
-AS
-BEGIN
-    SELECT SellerCEP, COUNT(*) AS [Count]
-    FROM Cotacao
-    GROUP BY SellerCEP
-END
